@@ -5,13 +5,13 @@
       <span class="hidden-sm-and-down">Pintext</span>
     </v-toolbar-title>
 
-    <v-combobox prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="model" :items="hints" :search-input.sync="search" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps" ref="selectField"
-      @change="onChange()">
+    <v-combobox prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearchGlobal" :items="hints" :search-input.sync="updatingSearchGlobal" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
+      ref="searchField" @change="onChange()">
       <template v-slot:no-data>
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title>
-              Press "enter" to search for "<strong>{{ search }}</strong>".
+              Press "enter" to search for "<strong>{{ updatingSearchGlobal }}</strong>".
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -27,11 +27,13 @@
         <v-img src="https://cdn.vuetifyjs.com/images/logos/logo.svg" alt="Vuetify" />
       </v-avatar>
     </v-btn>
+    <span>Name</span>
   </v-app-bar>
   <v-content>
     <v-container class="fill-height" fluid>
       <v-row align="center" justify="center">
-        {{ model }}
+        v-model: {{ updatingSearchGlobal }} <br />
+        search: {{ enteredSearchGlobal }} <br />
       </v-row>
     </v-container>
   </v-content>
@@ -61,6 +63,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     source: String,
@@ -71,13 +74,31 @@ export default {
     },
     dialog: false,
     hints: ['Gaming', 'Programming', 'Vue', 'Vuetify'],
-    model: '',
+    searchInputValue: '',
     search: null,
   }),
+  computed: {
+    updatingSearchGlobal: {
+      get() {
+        return this.$store.state.globalHints.updatingSearchGlobal
+      },
+      set(value) {
+        this.$store.commit('globalHints/UPDATE_SEARCH_GLOBAL', value)
+      }
+    },
+    enteredSearchGlobal: {
+      get() {
+        return this.$store.state.globalHints.enteredSearchGlobal
+      },
+      set(value) {
+        this.$store.commit('globalHints/SET_SEARCH_GLOBAL', value)
+      }
+    }
+  },
   methods: {
     onChange() {
       this.$nextTick(() => {
-        this.$refs.selectField.isMenuActive = false;
+        this.$refs.searchField.isMenuActive = false;
       });
     }
   }
