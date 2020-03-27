@@ -5,7 +5,7 @@
       <span class="hidden-sm-and-down">Pintext</span>
     </v-toolbar-title>
 
-    <v-combobox prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearchGlobal" :items="hints" :search-input.sync="updatingSearchGlobal" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
+    <v-combobox prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsList" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
       ref="searchField" @change="onChange()">
       <template v-slot:no-data>
         <v-list-item>
@@ -34,7 +34,7 @@
       <v-row align="center" justify="center">
         v-model: {{ updatingSearchGlobal }} <br />
         search: {{ enteredSearchGlobal }} <br />
-        {{ hints }}
+        {{ hintsList }}
       </v-row>
     </v-container>
   </v-content>
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   props: {
@@ -75,30 +75,29 @@ export default {
       closeOnContentClick: true
     },
     dialog: false,
-    hints: ['Gaming', 'Programming', 'Vue', 'Vuetify'],
-    searchInputValue: '',
-    search: null,
   }),
   computed: {
-    ...mapGetters('hints', ['hintsList']),
-    updatingSearchGlobal: {
+    ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
+    ...mapState('hints', ['hintsList']),
+    updatingSearch: {
       get() {
-        return this.$store.state.searchGlobal.updatingSearchGlobal
+        return this.updatingSearchGlobal
       },
       set(value) {
-        this.$store.commit('searchGlobal/UPDATE_SEARCH_GLOBAL', value)
+        this.UPDATE_SEARCH_GLOBAL(value.trim());
       }
     },
-    enteredSearchGlobal: {
+    enteredSearch: {
       get() {
-        return this.$store.state.searchGlobal.enteredSearchGlobal
+        return this.enteredSearchGlobal
       },
       set(value) {
-        this.$store.commit('searchGlobal/SET_SEARCH_GLOBAL', value)
+        this.SET_SEARCH_GLOBAL(value);
       }
     }
   },
   methods: {
+    ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
     onChange() {
       this.$nextTick(() => {
         this.$refs.searchField.isMenuActive = false;

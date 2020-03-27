@@ -1,6 +1,6 @@
 
 const state = {
-  hintsList: [],
+  hintsList: ['Gaming', 'Programming', 'Vue', 'Vuetify'],
   hintsObject: [{
       pin: 'gaming',
       counter: 0,
@@ -15,13 +15,11 @@ const state = {
 }
 
 const getters = {
-  hintsList: state => {
-      return state.hintsObject.filter(element => element.pin)
-  }
+
 }
 
 const actions = {
-
+  
 }
 
 const mutations = {
