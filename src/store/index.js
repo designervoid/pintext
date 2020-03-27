@@ -4,14 +4,16 @@ import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
-import globalHints from '@/store/modules/globalHints'
+import searchGlobal from '@/store/modules/searchGlobal';
+import hints from '@/store/modules/hints';
 
 export default new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},
   modules: {
-    globalHints
+    searchGlobal,
+    hints
   },
   plugins: [createPersistedState()]
 });

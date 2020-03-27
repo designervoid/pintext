@@ -34,6 +34,7 @@
       <v-row align="center" justify="center">
         v-model: {{ updatingSearchGlobal }} <br />
         search: {{ enteredSearchGlobal }} <br />
+        {{ hints }}
       </v-row>
     </v-container>
   </v-content>
@@ -63,6 +64,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 
 export default {
   props: {
@@ -78,20 +80,21 @@ export default {
     search: null,
   }),
   computed: {
+    ...mapGetters('hints', ['hintsList']),
     updatingSearchGlobal: {
       get() {
-        return this.$store.state.globalHints.updatingSearchGlobal
+        return this.$store.state.searchGlobal.updatingSearchGlobal
       },
       set(value) {
-        this.$store.commit('globalHints/UPDATE_SEARCH_GLOBAL', value)
+        this.$store.commit('searchGlobal/UPDATE_SEARCH_GLOBAL', value)
       }
     },
     enteredSearchGlobal: {
       get() {
-        return this.$store.state.globalHints.enteredSearchGlobal
+        return this.$store.state.searchGlobal.enteredSearchGlobal
       },
       set(value) {
-        this.$store.commit('globalHints/SET_SEARCH_GLOBAL', value)
+        this.$store.commit('searchGlobal/SET_SEARCH_GLOBAL', value)
       }
     }
   },
