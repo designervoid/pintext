@@ -95,7 +95,7 @@
                 <v-list-item
                   v-for="(recommendedPinGlobal, index) in recommendedPinsGlobal"
                   :key="index"
-                  @click="changeCategoryTextDropdown(recommendedPinGlobal);"
+                  @click="changeCategoryTextDropdown({ title: recommendedPinGlobal });"
                 >
                   <v-list-item-title>{{ recommendedPinGlobal }}</v-list-item-title>
                 </v-list-item>
@@ -119,7 +119,7 @@
                 <v-list-item
                   v-for="(recommendedPinUser, index) in recommendedPinsUser"
                   :key="index"
-                  @click="changeCategoryTextDropdown(recommendedPinUser);"
+                  @click="changeCategoryTextDropdown({ title: recommendedPinUser });"
                 >
                   <v-list-item-title>{{ recommendedPinUser }}</v-list-item-title>
                 </v-list-item>
@@ -127,7 +127,7 @@
             </v-menu>
       </v-row>
 
-      <v-row v-if="recommendedPinsUser.length > 0 && searchDropdownTitle === 'Сохраненные пинтексты'">
+      <v-row v-if="recommendedPinsUserSaved.length > 0 && searchDropdownTitle === 'Сохраненные пинтексты'">
         <v-menu offset-y :close-on-click="true">
               <template v-slot:activator="{ on }">
                 <v-btn
@@ -143,7 +143,7 @@
                 <v-list-item
                   v-for="(recommendedPinUserSaved, index) in recommendedPinsUserSaved"
                   :key="index"
-                  @click="changeCategoryTextDropdown(recommendedPinUserSaved);"
+                  @click="changeCategoryTextDropdown({ title: recommendedPinUserSaved });"
                 >
                   <v-list-item-title>{{ recommendedPinUserSaved }}</v-list-item-title>
                 </v-list-item>
@@ -265,7 +265,6 @@ export default {
       closeOnContentClick: true
     },
     dialog: false,
-    categoryDropdownTitle: '',
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
@@ -276,6 +275,7 @@ export default {
     ...mapGetters('hintsUserSaved', ['pinsListUserSaved', 'hintsListUserSaved']),
     ...mapState('hintsUserSaved', ['recommendedPinsUserSaved', 'recommendedHintsUserSaved']),
     ...mapState('searchDropdownState', ['searchDropdownTitle', 'searchDropdownItems']),
+    ...mapState('categoryDropdownState', ['categoryDropdownTitle']),
     updatingSearch: {
       get() {
         return this.updatingSearchGlobal
@@ -297,16 +297,26 @@ export default {
     if (this.searchDropdownTitle === 'Все пинтексты') {
         this.manualUpdateGettersGlobal();
     }
+
+    if (this.searchDropdownTitle === 'Ваши пинтексты') {
+        this.manualUpdateGettersUser();
+    }
+
+    if (this.searchDropdownTitle === 'Сохраненные пинтексты') {
+        this.manualUpdateGettersUserSavedl();
+    }
   },
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
+    ...mapMutations('searchGlobal', ['']),
     ...mapActions('hintsGlobal', ['manualUpdateGettersGlobal', 'findElementInHintsObjectGlobal', 'pushRecomendedHintsGlobal', 'filterByPinGlobal']),
     ...mapActions('hintsUser', ['manualUpdateGettersUser', 'findElementInHintsObjectUser', 'pushRecomendedHintsUser', 'filterByPinUser']),
     ...mapActions('hintsUserSaved', ['manualUpdateGettersUserSaved', 'findElementInHintsObjectUserSaved', 'pushRecomendedHintsUserSaved', 'filterByPinUserSaved']),
     ...mapActions('searchDropdownState', ['changeSearchTextDropdown']),
+    ...mapActions('categoryDropdownState', ['changeCategoryTextDropdown']),
     onChange() {
       this.$nextTick(() => {
-          if (this.searchDropdownTitle === 'Все пинтексты') {
+          if (this.searchDropdownTitle === 'Все пинтексты' && this.enteredSearch) {
             this.$refs.searchField.isMenuActive = false;
             this.findElementInHintsObjectGlobal({
               enteredSearch: this.enteredSearch
@@ -314,7 +324,7 @@ export default {
             this.pushRecomendedHintsGlobal();
           }
 
-          if (this.searchDropdownTitle === 'Ваши пинтексты') {
+          if (this.searchDropdownTitle === 'Ваши пинтексты' && this.enteredSearch) {
             this.$refs.searchField.isMenuActive = false;
             this.findElementInHintsObjectUser({
               enteredSearch: this.enteredSearch
@@ -322,7 +332,7 @@ export default {
             this.pushRecomendedHintsUser();
           }
 
-          if (this.searchDropdownTitle === 'Сохраненные пинтексты') {
+          if (this.searchDropdownTitle === 'Сохраненные пинтексты' && this.enteredSearch) {
             this.$refs.searchField.isMenuActive = false;
             this.findElementInHintsObjectUserSaved({
               enteredSearch: this.enteredSearch
@@ -331,10 +341,7 @@ export default {
           }
       });
     },
-    changeCategoryTextDropdown(title) {
-      this.categoryDropdownTitle = title;
-      this.filterByPinGlobal({ pin: title });
-    }
+
   }
 }
 </script>

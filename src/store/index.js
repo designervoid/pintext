@@ -5,6 +5,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 import searchDropdownState from '@/store/modules/searchDropdownState';
+import categoryDropdownState from '@/store/modules/categoryDropdownState';
 import searchGlobal from '@/store/modules/searchGlobal';
 import hintsGlobal from '@/store/modules/hintsGlobal';
 import hintsUser from '@/store/modules/hintsUser';
@@ -16,6 +17,7 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     searchDropdownState,
+    categoryDropdownState,
     searchGlobal,
     hintsGlobal,
     hintsUser,

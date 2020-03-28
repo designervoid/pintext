@@ -29,7 +29,7 @@ const state = {
       title: 'some title about computers',
       text: 'some text here about computers',
       badges: ['computer', 'network'],
-    },
+    }
   ],
   recommendedPinsGlobal: [],
   recommendedHintsGlobal: []
