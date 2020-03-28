@@ -1,9 +1,11 @@
 <template>
 <v-app id="inspire">
-  <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="blue darken-3" dark>
-    <v-toolbar-title style="width: 100px" class="ml-0 pl-4">
+  <v-app-bar :clipped-left="false" app color="blue darken-3" dark>
+    <v-toolbar-title class="ml-0 pl-4">
       <span class="hidden-sm-and-down">Pintext</span>
     </v-toolbar-title>
+
+    <v-spacer />
 
     <v-combobox v-if="searchDropdownTitle === 'Все пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListGlobal" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down"
       label="Search" persistent-hint :menu-props="menuProps" ref="searchField" @change="onChange()">
@@ -44,6 +46,8 @@
       </template>
     </v-combobox>
 
+    <v-spacer />
+
     <v-menu :close-on-click="true" offset-y>
       <template v-slot:activator="{ on }">
         <v-btn color="primary" dark v-on="on">
@@ -71,87 +75,90 @@
   </v-app-bar>
   <v-content>
     <v-container class="fill-height">
-      <v-row v-if="recommendedPinsGlobal.length > 0 && searchDropdownTitle === 'Все пинтексты'">
-        <v-menu offset-y :close-on-click="true">
-          <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark v-on="on">
-              {{ categoryDropdownTitle }}
-            </v-btn>
-          </template>
+      <v-row v-if="recommendedPinsGlobal.length > 0 && searchDropdownTitle === 'Все пинтексты'" align="center">
+        <v-col cols="12">
+          <v-menu offset-y :close-on-click="true">
+            <template v-slot:activator="{ on }">
+              <v-btn color="primary" dark v-on="on">
+                {{ categoryDropdownTitle }}
+              </v-btn>
+            </template>
 
-          <v-list>
-            <v-list-item v-for="(recommendedPinGlobal, index) in recommendedPinsGlobal" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinGlobal });">
-              <v-list-item-title>{{ recommendedPinGlobal }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-        <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'"
-        @click="refreshCategory();">
-          <div class="mx-2 my-1" >
-            <v-btn depressed small color="error">Сбросить категорию</v-btn>
+            <v-list>
+              <v-list-item v-for="(recommendedPinGlobal, index) in recommendedPinsGlobal" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinGlobal });">
+                <v-list-item-title>{{ recommendedPinGlobal }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'" @click="refreshCategory();">
+            <div class="mx-2 my-1">
+              <v-btn depressed small color="error">Сбросить категорию</v-btn>
+            </div>
           </div>
-        </div>
+        </v-col>
       </v-row>
 
-      <v-row v-if="recommendedPinsUser.length > 0 && searchDropdownTitle === 'Ваши пинтексты'">
-        <v-menu offset-y :close-on-click="true">
-          <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark v-on="on">
-              {{ categoryDropdownTitle }}
-            </v-btn>
-          </template>
+      <v-row v-if="recommendedPinsUser.length > 0 && searchDropdownTitle === 'Ваши пинтексты'" align="center">
+        <v-col cols="12">
+          <v-menu offset-y :close-on-click="true">
+            <template v-slot:activator="{ on }">
+              <v-btn color="primary" dark v-on="on">
+                {{ categoryDropdownTitle }}
+              </v-btn>
+            </template>
 
-          <v-list>
-            <v-list-item v-for="(recommendedPinUser, index) in recommendedPinsUser" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinUser });">
-              <v-list-item-title>{{ recommendedPinUser }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-        <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'"
-        @click="refreshCategory();">
-          <div class="mx-2 my-1" >
-            <v-btn depressed small color="error">Сбросить категорию</v-btn>
+            <v-list>
+              <v-list-item v-for="(recommendedPinUser, index) in recommendedPinsUser" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinUser });">
+                <v-list-item-title>{{ recommendedPinUser }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'" @click="refreshCategory();">
+            <div class="mx-2 my-1">
+              <v-btn depressed small color="error">Сбросить категорию</v-btn>
+            </div>
           </div>
-        </div>
+        </v-col>
       </v-row>
 
-      <v-row v-if="recommendedPinsUserSaved.length > 0 && searchDropdownTitle === 'Сохраненные пинтексты'">
-        <v-menu offset-y :close-on-click="true">
-          <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark v-on="on">
-              {{ categoryDropdownTitle }}
-            </v-btn>
-          </template>
+      <v-row v-if="recommendedPinsUserSaved.length > 0 && searchDropdownTitle === 'Сохраненные пинтексты'" align="center">
+        <v-col cols="12">
+          <v-menu offset-y :close-on-click="true">
+            <template v-slot:activator="{ on }">
+              <v-btn color="primary" dark v-on="on">
+                {{ categoryDropdownTitle }}
+              </v-btn>
+            </template>
 
-          <v-list>
-            <v-list-item v-for="(recommendedPinUserSaved, index) in recommendedPinsUserSaved" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinUserSaved });">
-              <v-list-item-title>{{ recommendedPinUserSaved }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-        <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'"
-        @click="refreshCategory();">
-          <div class="mx-2 my-1" >
-            <v-btn depressed small color="error">Сбросить категорию</v-btn>
+            <v-list>
+              <v-list-item v-for="(recommendedPinUserSaved, index) in recommendedPinsUserSaved" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinUserSaved });">
+                <v-list-item-title>{{ recommendedPinUserSaved }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'" @click="refreshCategory();">
+            <div class="mx-2 my-1">
+              <v-btn depressed small color="error">Сбросить категорию</v-btn>
+            </div>
           </div>
-        </div>
+        </v-col>
       </v-row>
 
-      <v-row v-if="searchDropdownTitle === 'Все пинтексты'" justify="space-around">
+      <v-row v-if="searchDropdownTitle === 'Все пинтексты'" justify="space-around" align="center">
         <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal" :key="index">
-          <TheCard :title="recommendedHintGlobal.title" :text="recommendedHintGlobal.text" :isSavingPin="true" />
+          <TheCard :badges="recommendedHintGlobal.badges" :title="recommendedHintGlobal.title" :text="recommendedHintGlobal.text" :isSavingPin="true" />
         </div>
       </v-row>
 
-      <v-row v-if="searchDropdownTitle === 'Ваши пинтексты'" justify="space-around">
+      <v-row v-if="searchDropdownTitle === 'Ваши пинтексты'" justify="space-around" align="center">
         <div v-for="(recommendedHintUser, index) in recommendedHintsUser" :key="index">
-          <TheCard :title="recommendedHintUser.title" :text="recommendedHintUser.text" />
+          <TheCard :badges="recommendedHintUser.badges" :title="recommendedHintUser.title" :text="recommendedHintUser.text" />
         </div>
       </v-row>
 
-      <v-row v-if="searchDropdownTitle === 'Сохраненные пинтексты'" justify="space-around">
+      <v-row v-if="searchDropdownTitle === 'Сохраненные пинтексты'" justify="space-around" align="center">
         <div v-for="(recommendedHintUserSaved, index) in recommendedHintsUserSaved" :key="index">
-          <TheCard :title="recommendedHintUserSaved.title" :text="recommendedHintUserSaved.text" />
+          <TheCard :badges="recommendedHintUserSaved.badges" :title="recommendedHintUserSaved.title" :text="recommendedHintUserSaved.text" />
         </div>
       </v-row>
 
@@ -217,20 +224,36 @@
   </v-btn>
   <v-dialog v-model="dialog" width="800px">
     <v-card>
-      <v-card-title class="grey darken-2">
+      <v-card-title class="darken-2">
         Create pintext
       </v-card-title>
       <v-container>
         <v-row class="mx-2">
           <v-col cols="12">
-            <v-text-field prepend-icon="mdi-text" placeholder="Notes" />
+            <v-text-field prepend-icon="mdi-text" placeholder="Title" />
+          </v-col>
+        </v-row>
+        <v-row class="mx-2">
+          <v-col cols="12">
+            <v-text-field prepend-icon="mdi-text" placeholder="Text" />
+          </v-col>
+        </v-row>
+        <v-row class="mx-2">
+          <v-col cols="12">
+            <v-combobox v-model="chips" :items="hintsListGlobal" chips clearable label="Write badges" multiple prepend-icon="mdi-text" solo>
+              <template v-slot:selection="{ attrs, item, select, selected }">
+                <v-chip v-bind="attrs" :input-value="selected" close @click="select" @click:close="remove(item)">
+                  {{ item }}
+                </v-chip>
+              </template>
+            </v-combobox>
           </v-col>
         </v-row>
       </v-container>
       <v-card-actions>
         <v-spacer />
-        <v-btn text color="primary" @click="dialog = false">Cancel</v-btn>
-        <v-btn text @click="dialog = false">Save</v-btn>
+        <v-btn text color="primary" @click="closeDialog();">Cancel</v-btn>
+        <v-btn text @click="createPin();">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -252,9 +275,10 @@ export default {
   },
   data: () => ({
     menuProps: {
-      closeOnContentClick: true
+      closeOnContentClick: true,
     },
     dialog: false,
+    chips: [],
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
@@ -294,6 +318,13 @@ export default {
 
     if (this.searchDropdownTitle === 'Сохраненные пинтексты') {
       this.manualUpdateGettersUserSavedl();
+    }
+  },
+  watch: {
+    dialog(newValue) {
+      if (this.chips || newValue === false) {
+        this.chips = [];
+      }
     }
   },
   methods: {
@@ -346,8 +377,18 @@ export default {
         this.SET_CATEGORY_DROPDOWN_TITLE('Выберите пин (категория)');
         this.pushRecomendedHintsUserSaved();
       }
-    }
-
+    },
+    closeDialog() {
+      this.dialog = false;
+    },
+    createPin() {
+      this.dialog = false;
+      console.log(this.chips);
+    },
+    remove(item) {
+      this.chips.splice(this.chips.indexOf(item), 1)
+      this.chips = [...this.chips]
+    },
   }
 }
 </script>
