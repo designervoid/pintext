@@ -32,10 +32,26 @@
   <v-content>
     <v-container class="fill-height" fluid>
       <v-row align="center" justify="center">
-        v-model: {{ updatingSearchGlobal }} <br />
-        search: {{ enteredSearchGlobal }} <br />
-        {{ hintsList }}
+        <div>
+        v-model: <code>{{ updatingSearchGlobal }}</code>
+        </div>
+        <div>
+        search: <code>{{ enteredSearchGlobal }}</code>
+        </div>
+        <div>
+        hints: <code>{{ hintsList }}</code>
+        </div>
+        <div>
+        recomendation pins: <code>{{ recommendedPins }}</code>
+        </div>
       </v-row>
+
+      <v-row align="center" justify="center">
+        <div>
+        recomendation hints: <code>{{ recommendedHints }}</code>
+        </div>
+      </v-row>
+
     </v-container>
   </v-content>
   <v-btn bottom color="pink" dark fab fixed right @click="dialog = !dialog">
@@ -64,7 +80,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   props: {
@@ -78,6 +94,7 @@ export default {
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
+    ...mapState('hints', ['recommendedPins', 'recommendedHints']),
     ...mapGetters('hints', ['pinsList', 'hintsList']),
     updatingSearch: {
       get() {
@@ -98,9 +115,14 @@ export default {
   },
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
+    ...mapActions('hints', ['findElementInHintsObject', 'pushRecomendedHints']),
     onChange() {
       this.$nextTick(() => {
         this.$refs.searchField.isMenuActive = false;
+        this.findElementInHintsObject({
+          enteredSearch: this.enteredSearch
+        });
+        this.pushRecomendedHints();
       });
     }
   }
