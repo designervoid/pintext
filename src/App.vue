@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 
 export default {
   props: {
@@ -78,13 +78,13 @@ export default {
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
-    ...mapState('hints', ['hintsList']),
+    ...mapGetters('hints', ['pinsList', 'hintsList']),
     updatingSearch: {
       get() {
         return this.updatingSearchGlobal
       },
       set(value) {
-        this.UPDATE_SEARCH_GLOBAL(value.trim());
+        this.UPDATE_SEARCH_GLOBAL(value);
       }
     },
     enteredSearch: {

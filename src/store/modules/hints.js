@@ -1,6 +1,4 @@
-
 const state = {
-  hintsList: ['Gaming', 'Programming', 'Vue', 'Vuetify'],
   hintsObject: [{
       pin: 'gaming',
       counter: 0,
@@ -15,11 +13,53 @@ const state = {
 }
 
 const getters = {
-
+  pinsList: state => {
+    let arr = [];
+    for (let element in state.hintsObject) {
+      let hint = state.hintsObject[element];
+      arr.push(hint.pin);
+    }
+    return arr
+  },
+  hintsList: state => {
+    let arr = [];
+    for (let element in state.hintsObject) {
+      let hint = state.hintsObject[element];
+      arr.push(hint.badges);
+    }
+    let merged = arr.flat(1);
+    return merged
+  }
 }
 
 const actions = {
-  
+  binarySearch({
+    state
+  }, payload) {
+    let arr = state.pinsList;
+    let val = payload.val;
+    let start = 0;
+    let end = arr.length - 1;
+
+    while (start <= end) {
+      let mid = Math.floor((start + end) / 2);
+
+      if (arr[mid] === val) {
+        return mid;
+      }
+
+      if (val < arr[mid]) {
+        end = mid - 1;
+      } else {
+        start = mid + 1;
+      }
+    }
+
+    return -1;
+  },
+  findElementInHintsObject({ state }) {
+
+  }
 }
 
 const mutations = {
