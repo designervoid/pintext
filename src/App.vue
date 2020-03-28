@@ -5,7 +5,7 @@
       <span class="hidden-sm-and-down">Pintext</span>
     </v-toolbar-title>
 
-    <v-combobox prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsList" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
+    <v-combobox prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListGlobal" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
       ref="searchField" @change="onChange()">
       <template v-slot:no-data>
         <v-list-item>
@@ -85,7 +85,7 @@
         search: <code>{{ enteredSearchGlobal }}</code>
         </div>
         <div>
-        hints: <code>{{ hintsList }}</code>
+        hints: <code>{{ hintsListGlobal }}</code>
         </div>
         <div>
         recomendation pins: <code>{{ recommendedPinsGlobal }}</code>
@@ -147,8 +147,8 @@ export default {
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
-    ...mapState('hints', ['recommendedPinsGlobal', 'recommendedHintsGlobal']),
-    ...mapGetters('hints', ['pinsList', 'hintsList']),
+    ...mapState('hintsGlobal', ['recommendedPinsGlobal', 'recommendedHintsGlobal']),
+    ...mapGetters('hintsGlobal', ['pinsListGlobal', 'hintsListGlobal']),
     updatingSearch: {
       get() {
         return this.updatingSearchGlobal
@@ -171,7 +171,7 @@ export default {
   },
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
-    ...mapActions('hints', ['manualUpdateGetters', 'findElementInHintsObject', 'pushRecomendedHints', 'filterByPin']),
+    ...mapActions('hintsGlobal', ['manualUpdateGetters', 'findElementInHintsObject', 'pushRecomendedHints', 'filterByPin']),
     onChange() {
       this.$nextTick(() => {
         this.$refs.searchField.isMenuActive = false;

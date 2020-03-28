@@ -5,7 +5,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 import searchGlobal from '@/store/modules/searchGlobal';
-import hints from '@/store/modules/hints';
+import hintsGlobal from '@/store/modules/hintsGlobal';
 
 export default new Vuex.Store({
   state: {},
@@ -13,7 +13,7 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     searchGlobal,
-    hints
+    hintsGlobal
   },
   // plugins: [createPersistedState()]
 });

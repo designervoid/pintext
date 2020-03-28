@@ -1,7 +1,7 @@
 import { REFRESH_RECOMENDATION_PINS_GLOBAL, SET_RECOMENDATION_PINS_GLOBAL, REFRESH_RECOMENDATION_HINTS_GLOBAL, SET_RECOMENDATION_HINTS_GLOBAL  } from '../mutation-types';
 
 const state = {
-  hintsObject: [
+  hintsObjectGlobal: [
     {
       id: 1,
       pin: 'gaming',
@@ -32,18 +32,18 @@ const state = {
 }
 
 const getters = {
-  pinsList: state => {
+  pinsListGlobal: state => {
     let arr = [];
-    for (let element in state.hintsObject) {
-      let hint = state.hintsObject[element];
+    for (let element in state.hintsObjectGlobal) {
+      let hint = state.hintsObjectGlobal[element];
       arr.push(hint.pin);
     }
     return arr
   },
-  hintsList: state => {
+  hintsListGlobal: state => {
     let arr = [];
-    for (let element in state.hintsObject) {
-      let hint = state.hintsObject[element];
+    for (let element in state.hintsObjectGlobal) {
+      let hint = state.hintsObjectGlobal[element];
       arr.push(hint.badges);
     }
     let merged = arr.flat(1);
@@ -54,15 +54,15 @@ const getters = {
 const actions = {
   manualUpdateGetters({ state, commit, getters, dispatch }) {
     if (state.recommendedPinsGlobal.length === 0) {
-      commit(REFRESH_RECOMENDATION_PINS_GLOBAL, [...getters.pinsList]);
+      commit(REFRESH_RECOMENDATION_PINS_GLOBAL, [...getters.pinsListGlobal]);
       dispatch('pushRecomendedHints');
     }
   },
   findElementInHintsObject({ state, commit, getters }, payload) {
     let enteredSearch = payload.enteredSearch;
     commit(REFRESH_RECOMENDATION_PINS_GLOBAL, []);
-    for (let element in state.hintsObject) {
-      let hint = state.hintsObject[element];
+    for (let element in state.hintsObjectGlobal) {
+      let hint = state.hintsObjectGlobal[element];
 
       if (hint.badges.indexOf(enteredSearch) !== -1) {
           hint.counter += 1;
@@ -72,8 +72,8 @@ const actions = {
   },
   iterateRecomendedPins({ state, commit }, payload) {
     let pin = payload.pin;
-    for (let element in state.hintsObject) {
-      let hint = state.hintsObject[element];
+    for (let element in state.hintsObjectGlobal) {
+      let hint = state.hintsObjectGlobal[element];
       if (hint.pin === pin) {
         commit(SET_RECOMENDATION_HINTS_GLOBAL, hint);
       }
