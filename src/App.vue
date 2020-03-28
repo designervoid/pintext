@@ -18,6 +18,28 @@
       </template>
     </v-combobox>
 
+    <v-menu :close-on-click="true" offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              color="primary"
+              dark
+              v-on="on"
+            >
+              {{ searchDropdownTitle }}
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-for="(searchDropdownItem, index) in searchDropdownItems"
+              :key="index"
+              @click="changeSearchTextDropdown(searchDropdownItem.title);"
+            >
+              <v-list-item-title>{{ searchDropdownItem.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
     <v-spacer />
     <v-btn rounded>
       <span>Главная</span>
@@ -30,7 +52,31 @@
     <span>Name</span>
   </v-app-bar>
   <v-content>
-    <v-container class="fill-height" fluid>
+    <v-container class="fill-height">
+      <v-row v-if="recommendedPinsGlobal.length > 0">
+        <v-menu offset-y :close-on-click="true">
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  v-on="on"
+                >
+                  {{ categoryDropdownTitle }}
+                </v-btn>
+              </template>
+
+              <v-list>
+                <v-list-item
+                  v-for="(recommendedPinGlobal, index) in recommendedPinsGlobal"
+                  :key="index"
+                  @click="changeCategoryTextDropdown(recommendedPinGlobal);"
+                >
+                  <v-list-item-title>{{ recommendedPinGlobal }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+      </v-row>
+
       <v-row align="center" justify="center">
         <div>
         v-model: <code>{{ updatingSearchGlobal }}</code>
@@ -42,13 +88,13 @@
         hints: <code>{{ hintsList }}</code>
         </div>
         <div>
-        recomendation pins: <code>{{ recommendedPins }}</code>
+        recomendation pins: <code>{{ recommendedPinsGlobal }}</code>
         </div>
       </v-row>
 
       <v-row align="center" justify="center">
         <div>
-        recomendation hints: <code>{{ recommendedHints }}</code>
+        recomendation hints: <code>{{ recommendedHintsGlobal }}</code>
         </div>
       </v-row>
 
@@ -91,10 +137,17 @@ export default {
       closeOnContentClick: true
     },
     dialog: false,
+    categoryDropdownTitle: '',
+    searchDropdownTitle: '',
+    searchDropdownItems: [
+      { title: 'Все пинтексты' },
+      { title: 'Ваши пинтексты' },
+      { title: 'Сохраненные пинтексты' },
+    ]
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
-    ...mapState('hints', ['recommendedPins', 'recommendedHints']),
+    ...mapState('hints', ['recommendedPinsGlobal', 'recommendedHintsGlobal']),
     ...mapGetters('hints', ['pinsList', 'hintsList']),
     updatingSearch: {
       get() {
@@ -113,9 +166,12 @@ export default {
       }
     }
   },
+  created() {
+    this.manualUpdateGetters();
+  },
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
-    ...mapActions('hints', ['findElementInHintsObject', 'pushRecomendedHints']),
+    ...mapActions('hints', ['manualUpdateGetters', 'findElementInHintsObject', 'pushRecomendedHints', 'filterByPin']),
     onChange() {
       this.$nextTick(() => {
         this.$refs.searchField.isMenuActive = false;
@@ -124,6 +180,13 @@ export default {
         });
         this.pushRecomendedHints();
       });
+    },
+    changeCategoryTextDropdown(title) {
+      this.categoryDropdownTitle = title;
+      this.filterByPin({ pin: title });
+    },
+    changeSearchTextDropdown(title) {
+      this.searchDropdownTitle = title;
     }
   }
 }

@@ -1,8 +1,9 @@
-import { REFRESH_RECOMENDATION_PINS, SET_RECOMENDATION_PINS, SET_RECOMENDATION_HINTS  } from '../mutation-types';
+import { REFRESH_RECOMENDATION_PINS_GLOBAL, SET_RECOMENDATION_PINS_GLOBAL, REFRESH_RECOMENDATION_HINTS_GLOBAL, SET_RECOMENDATION_HINTS_GLOBAL  } from '../mutation-types';
 
 const state = {
   hintsObject: [
     {
+      id: 1,
       pin: 'gaming',
       counter: 0,
       title: 'some title about gaming',
@@ -10,6 +11,7 @@ const state = {
       badges: ['game', 'gamer', 'games', 'computer'],
     },
     {
+      id: 2,
       pin: 'programming',
       counter: 0,
       title: 'some title about prograaming',
@@ -17,6 +19,7 @@ const state = {
       badges: ['programmer', 'code', 'coder', 'javascript', 'computer', 'vue', 'python'],
     },
     {
+      id: 3,
       pin: 'computers',
       counter: 0,
       title: 'some title about computers',
@@ -24,8 +27,8 @@ const state = {
       badges: ['computer', 'network'],
     },
   ],
-  recommendedPins: [],
-  recommendedHints: []
+  recommendedPinsGlobal: [],
+  recommendedHintsGlobal: []
 }
 
 const getters = {
@@ -49,39 +52,21 @@ const getters = {
 }
 
 const actions = {
-  // binarySearch({
-  //   state
-  // }, payload) {
-  //   let arr = state.pinsList;
-  //   let val = payload.val;
-  //   let start = 0;
-  //   let end = arr.length - 1;
-  //
-  //   while (start <= end) {
-  //     let mid = Math.floor((start + end) / 2);
-  //
-  //     if (arr[mid] === val) {
-  //       return mid;
-  //     }
-  //
-  //     if (val < arr[mid]) {
-  //       end = mid - 1;
-  //     } else {
-  //       start = mid + 1;
-  //     }
-  //   }
-  //
-  //   return -1;
-  // },
-  findElementInHintsObject({ state, commit }, payload) {
+  manualUpdateGetters({ state, commit, getters, dispatch }) {
+    if (state.recommendedPinsGlobal.length === 0) {
+      commit(REFRESH_RECOMENDATION_PINS_GLOBAL, [...getters.pinsList]);
+      dispatch('pushRecomendedHints');
+    }
+  },
+  findElementInHintsObject({ state, commit, getters }, payload) {
     let enteredSearch = payload.enteredSearch;
-    commit(REFRESH_RECOMENDATION_PINS, []);
+    commit(REFRESH_RECOMENDATION_PINS_GLOBAL, []);
     for (let element in state.hintsObject) {
       let hint = state.hintsObject[element];
 
       if (hint.badges.indexOf(enteredSearch) !== -1) {
           hint.counter += 1;
-          commit(SET_RECOMENDATION_PINS, hint.pin)
+          commit(SET_RECOMENDATION_PINS_GLOBAL, hint.pin)
       }
     }
   },
@@ -90,28 +75,37 @@ const actions = {
     for (let element in state.hintsObject) {
       let hint = state.hintsObject[element];
       if (hint.pin === pin) {
-        commit(SET_RECOMENDATION_HINTS, hint);
+        commit(SET_RECOMENDATION_HINTS_GLOBAL, hint);
       }
     }
   },
-  pushRecomendedHints({ state, dispatch }) {
-    let pins = state.recommendedPins;
+  pushRecomendedHints({ state, dispatch, commit }) {
+    commit(REFRESH_RECOMENDATION_HINTS_GLOBAL, []);
+    let pins = state.recommendedPinsGlobal;
     for (let element in pins) {
       let pin = pins[element];
       dispatch('iterateRecomendedPins', { pin: pin })
     }
+  },
+  filterByPin({ commit, dispatch }, payload) {
+    let pin = payload.pin;
+    commit(REFRESH_RECOMENDATION_HINTS_GLOBAL, []);
+    dispatch('iterateRecomendedPins', { pin: pin })
   }
 }
 
 const mutations = {
-  [REFRESH_RECOMENDATION_PINS](state, payload) {
-    state.recommendedPins = payload;
+  [REFRESH_RECOMENDATION_PINS_GLOBAL](state, payload) {
+    state.recommendedPinsGlobal = payload;
   },
-  [SET_RECOMENDATION_PINS](state, payload) {
-    state.recommendedPins.push(payload);
+  [SET_RECOMENDATION_PINS_GLOBAL](state, payload) {
+    state.recommendedPinsGlobal.push(payload);
   },
-  [SET_RECOMENDATION_HINTS](state, payload) {
-    state.recommendedHints.push(payload);
+  [REFRESH_RECOMENDATION_HINTS_GLOBAL](state, payload) {
+    state.recommendedHintsGlobal = payload;
+  },
+  [SET_RECOMENDATION_HINTS_GLOBAL](state, payload) {
+    state.recommendedHintsGlobal.push(payload);
   }
 }
 
