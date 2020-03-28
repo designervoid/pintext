@@ -5,7 +5,20 @@
       <span class="hidden-sm-and-down">Pintext</span>
     </v-toolbar-title>
 
-    <v-combobox prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListGlobal" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
+    <v-combobox v-if="searchDropdownTitle === 'Все пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListGlobal" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
+      ref="searchField" @change="onChange()">
+      <template v-slot:no-data>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>
+              Press "enter" to search for "<strong>{{ updatingSearchGlobal }}</strong>".
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-combobox>
+
+    <v-combobox v-if="searchDropdownTitle === 'Ваши пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListUser" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
       ref="searchField" @change="onChange()">
       <template v-slot:no-data>
         <v-list-item>
@@ -77,14 +90,21 @@
             </v-menu>
       </v-row>
 
-      <v-row>
+      <v-row v-if="searchDropdownTitle === 'Все пинтексты'">
         <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal"
         :key="index">
           {{ recommendedHintGlobal.title }} | {{ recommendedHintGlobal.text }} | {{ recommendedHintGlobal.badges }}
         </div>
       </v-row>
 
-      <v-row align="center" justify="center">
+      <v-row v-if="searchDropdownTitle === 'Ваши пинтексты'">
+        <div v-for="(recommendedHintUser, index) in recommendedHintsUser"
+        :key="index">
+          {{ recommendedHintUser }}
+        </div>
+      </v-row>
+
+      <v-row align="center" justify="center" v-if="searchDropdownTitle === 'Все пинтексты'">
         <div>
         v-model: <code>{{ updatingSearchGlobal }}</code>
         </div>
@@ -97,11 +117,26 @@
         <div>
         recomendation pins: <code>{{ recommendedPinsGlobal }}</code>
         </div>
-      </v-row>
-
-      <v-row align="center" justify="center">
         <div>
         recomendation hints: <code>{{ recommendedHintsGlobal }}</code>
+        </div>
+      </v-row>
+
+      <v-row align="center" justify="center" v-if="searchDropdownTitle === 'Ваши пинтексты'">
+        <div>
+        v-model: <code>{{ updatingSearchGlobal }}</code>
+        </div>
+        <div>
+        search: <code>{{ enteredSearchGlobal }}</code>
+        </div>
+        <div>
+        hints: <code>{{ hintsListUser }}</code>
+        </div>
+        <div>
+        recomendation pins: <code>{{ recommendedPinsUser }}</code>
+        </div>
+        <div>
+        recomendation hints: <code>{{ recommendedHintsUser }}</code>
         </div>
       </v-row>
 
@@ -148,9 +183,11 @@ export default {
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
-    ...mapState('hintsGlobal', ['recommendedPinsGlobal', 'recommendedHintsGlobal']),
-    ...mapState('searchDropdownState', ['searchDropdownTitle', 'searchDropdownItems']),
     ...mapGetters('hintsGlobal', ['pinsListGlobal', 'hintsListGlobal']),
+    ...mapState('hintsGlobal', ['recommendedPinsGlobal', 'recommendedHintsGlobal']),
+    ...mapGetters('hintsUser', ['pinsListUser', 'hintsListUser']),
+    ...mapState('hintsUser', ['recommendedPinsUser', 'recommendedHintsUser']),
+    ...mapState('searchDropdownState', ['searchDropdownTitle', 'searchDropdownItems']),
     updatingSearch: {
       get() {
         return this.updatingSearchGlobal
@@ -169,11 +206,14 @@ export default {
     }
   },
   created() {
-    this.manualUpdateGettersGlobal();
+    if (this.searchDropdownTitle === 'Все пинтексты') {
+        this.manualUpdateGettersGlobal();
+    }
   },
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
     ...mapActions('hintsGlobal', ['manualUpdateGettersGlobal', 'findElementInHintsObjectGlobal', 'pushRecomendedHintsGlobal', 'filterByPinGlobal']),
+    ...mapActions('hintsUser', ['manualUpdateGettersUser', 'findElementInHintsObjectUser', 'pushRecomendedHintsUser', 'filterByPinUser']),
     ...mapActions('searchDropdownState', ['changeSearchTextDropdown']),
     onChange() {
       this.$nextTick(() => {
@@ -183,6 +223,14 @@ export default {
               enteredSearch: this.enteredSearch
             });
             this.pushRecomendedHintsGlobal();
+          }
+
+          if (this.searchDropdownTitle === 'Ваши пинтексты') {
+            this.$refs.searchField.isMenuActive = false;
+            this.findElementInHintsObjectUser({
+              enteredSearch: this.enteredSearch
+            });
+            this.pushRecomendedHintsUser();
           }
       });
     },

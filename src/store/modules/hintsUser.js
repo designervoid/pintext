@@ -7,24 +7,24 @@ import {
 
 const state = {
   hintsObjectUser: [{
-      id: 1,
-      pin: 'gaming',
+      id: 4,
+      pin: 'another_gaming',
       counter: 0,
-      title: 'some title about gaming',
+      title: 'another some title about gaming',
       text: 'some text here about gaming',
-      badges: ['game', 'gamer', 'games', 'computer'],
+      badges: ['another_game', 'gamer', 'games', 'computer'],
     },
     {
-      id: 2,
-      pin: 'programming',
+      id: 5,
+      pin: 'another_programming',
       counter: 0,
       title: 'some title about prograaming',
       text: 'some text here about prograaming',
       badges: ['programmer', 'code', 'coder', 'javascript', 'computer', 'vue', 'python'],
     },
     {
-      id: 3,
-      pin: 'computers',
+      id: 6,
+      pin: 'another_computers',
       counter: 0,
       title: 'some title about computers',
       text: 'some text here about computers',
@@ -67,7 +67,7 @@ const actions = {
       dispatch('pushRecomendedHintsUser');
     }
   },
-  findElementInHintsObject({
+  findElementInHintsObjectUser({
     state,
     commit,
     getters
