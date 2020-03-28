@@ -169,24 +169,26 @@ export default {
     }
   },
   created() {
-    this.manualUpdateGetters();
+    this.manualUpdateGettersGlobal();
   },
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
-    ...mapActions('hintsGlobal', ['manualUpdateGetters', 'findElementInHintsObject', 'pushRecomendedHints', 'filterByPin']),
+    ...mapActions('hintsGlobal', ['manualUpdateGettersGlobal', 'findElementInHintsObjectGlobal', 'pushRecomendedHintsGlobal', 'filterByPinGlobal']),
     ...mapActions('searchDropdownState', ['changeSearchTextDropdown']),
     onChange() {
       this.$nextTick(() => {
-        this.$refs.searchField.isMenuActive = false;
-        this.findElementInHintsObject({
-          enteredSearch: this.enteredSearch
-        });
-        this.pushRecomendedHints();
+          if (this.searchDropdownTitle === 'Все пинтексты') {
+            this.$refs.searchField.isMenuActive = false;
+            this.findElementInHintsObjectGlobal({
+              enteredSearch: this.enteredSearch
+            });
+            this.pushRecomendedHintsGlobal();
+          }
       });
     },
     changeCategoryTextDropdown(title) {
       this.categoryDropdownTitle = title;
-      this.filterByPin({ pin: title });
+      this.filterByPinGlobal({ pin: title });
     }
   }
 }

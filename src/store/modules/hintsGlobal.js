@@ -56,7 +56,7 @@ const getters = {
 }
 
 const actions = {
-  manualUpdateGetters({
+  manualUpdateGettersGlobal({
     state,
     commit,
     getters,
@@ -64,10 +64,10 @@ const actions = {
   }) {
     if (state.recommendedPinsGlobal.length === 0) {
       commit(REFRESH_RECOMENDATION_PINS_GLOBAL, [...getters.pinsListGlobal]);
-      dispatch('pushRecomendedHints');
+      dispatch('pushRecomendedHintsGlobal');
     }
   },
-  findElementInHintsObject({
+  findElementInHintsObjectGlobal({
     state,
     commit,
     getters
@@ -83,7 +83,7 @@ const actions = {
       }
     }
   },
-  iterateRecomendedPins({
+  iterateRecomendedPinsGlobal({
     state,
     commit
   }, payload) {
@@ -95,7 +95,7 @@ const actions = {
       }
     }
   },
-  pushRecomendedHints({
+  pushRecomendedHintsGlobal({
     state,
     dispatch,
     commit
@@ -104,18 +104,18 @@ const actions = {
     let pins = state.recommendedPinsGlobal;
     for (let element in pins) {
       let pin = pins[element];
-      dispatch('iterateRecomendedPins', {
+      dispatch('iterateRecomendedPinsGlobal', {
         pin: pin
       })
     }
   },
-  filterByPin({
+  filterByPinGlobal({
     commit,
     dispatch
   }, payload) {
     let pin = payload.pin;
     commit(REFRESH_RECOMENDATION_HINTS_GLOBAL, []);
-    dispatch('iterateRecomendedPins', {
+    dispatch('iterateRecomendedPinsGlobal', {
       pin: pin
     })
   }
