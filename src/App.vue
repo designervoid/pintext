@@ -1,11 +1,9 @@
 <template>
 <v-app id="inspire">
   <v-app-bar :clipped-left="false" app color="blue darken-3" dark>
-    <v-toolbar-title class="ml-0 pl-4">
+    <v-toolbar-title class="ml-0 pl-4" style="width: 100px;">
       <span class="hidden-sm-and-down">Pintext</span>
     </v-toolbar-title>
-
-    <v-spacer />
 
     <v-combobox v-if="searchDropdownTitle === 'Все пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListGlobal" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down"
       label="Search" persistent-hint :menu-props="menuProps" ref="searchField" @change="onChange()">
@@ -62,16 +60,6 @@
       </v-list>
     </v-menu>
 
-    <v-spacer />
-    <v-btn rounded>
-      <span>Главная</span>
-    </v-btn>
-    <v-btn icon large>
-      <v-avatar size="32px" item>
-        <v-img src="https://cdn.vuetifyjs.com/images/logos/logo.svg" alt="Vuetify" />
-      </v-avatar>
-    </v-btn>
-    <span>Name</span>
   </v-app-bar>
   <v-content>
     <v-container class="fill-height">

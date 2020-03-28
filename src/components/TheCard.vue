@@ -8,7 +8,7 @@
   </v-list-item>
 
   <v-card-actions v-if="isSavingPin">
-    <v-btn text>Save</v-btn>
+    <v-btn text @click="snackbar = true">Save</v-btn>
   </v-card-actions>
 
   <div class="badges px-4 pr-4">
@@ -16,6 +16,20 @@
       {{ badge }}
     </v-chip>
   </div>
+
+  <v-snackbar v-if="isSavingPin"
+      v-model="snackbar"
+      :timeout="timeout"
+    >
+      Пинтекст успешно добавлен. Вы можете увидеть его во вкладке "Сохраненные пинтексты".
+      <v-btn
+        color="blue"
+        text
+        @click="snackbar = false"
+      >
+        Закрыть
+      </v-btn>
+    </v-snackbar>
 </v-card>
 </template>
 
@@ -46,7 +60,11 @@ export default {
         return false
       }
     }
-  }
+  },
+  data: () => ({
+      snackbar: false,
+      timeout: 2000,
+  }),
 }
 </script>
 
@@ -54,5 +72,15 @@ export default {
 .badges {
   height: 6rem !important;
   overflow: auto;
+}
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  height: 3rem !important;
+  background-color: rgba(0, 0, 0, .5);
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
 </style>
