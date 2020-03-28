@@ -1,4 +1,5 @@
-import { SET_SEARCH_DROPDOWN_STATE } from '../mutation-types';
+import searchGlobal from '@/store/modules/searchGlobal';
+import { SET_SEARCH_DROPDOWN_STATE, UPDATE_SEARCH_GLOBAL, SET_SEARCH_GLOBAL } from '../mutation-types';
 
 const state = {
   searchDropdownTitle: 'Все пинтексты',
@@ -17,6 +18,8 @@ const actions = {
   changeSearchTextDropdown({ state, commit }, payload) {
     let title = payload.title;
     commit(SET_SEARCH_DROPDOWN_STATE, title);
+    commit(`searchGlobal/${UPDATE_SEARCH_GLOBAL}`, null);
+    commit(`searchGlobal/${SET_SEARCH_GLOBAL}`, '');
   }
 }
 
@@ -26,10 +29,14 @@ const mutations = {
   }
 }
 
+const modules = {
+  searchGlobal
+}
 export default {
   namespaced: true,
   state,
   getters,
   actions,
-  mutations
+  mutations,
+  modules
 }

@@ -66,7 +66,7 @@
   </v-app-bar>
   <v-content>
     <v-container class="fill-height">
-      <v-row v-if="recommendedPinsGlobal.length > 0">
+      <v-row v-if="recommendedPinsGlobal.length > 0 && searchDropdownTitle === 'Все пинтексты'">
         <v-menu offset-y :close-on-click="true">
               <template v-slot:activator="{ on }">
                 <v-btn
@@ -90,10 +90,34 @@
             </v-menu>
       </v-row>
 
+      <v-row v-if="recommendedPinsUser.length > 0 && searchDropdownTitle === 'Ваши пинтексты'">
+        <v-menu offset-y :close-on-click="true">
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  v-on="on"
+                >
+                  {{ categoryDropdownTitle }}
+                </v-btn>
+              </template>
+
+              <v-list>
+                <v-list-item
+                  v-for="(recommendedPinUser, index) in recommendedPinsUser"
+                  :key="index"
+                  @click="changeCategoryTextDropdown(recommendedPinUser);"
+                >
+                  <v-list-item-title>{{ recommendedPinUser }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+      </v-row>
+
       <v-row v-if="searchDropdownTitle === 'Все пинтексты'">
         <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal"
         :key="index">
-          {{ recommendedHintGlobal.title }} | {{ recommendedHintGlobal.text }} | {{ recommendedHintGlobal.badges }}
+          {{ recommendedHintGlobal }}
         </div>
       </v-row>
 
