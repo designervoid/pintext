@@ -1,8 +1,12 @@
-import { REFRESH_RECOMENDATION_PINS_GLOBAL, SET_RECOMENDATION_PINS_GLOBAL, REFRESH_RECOMENDATION_HINTS_GLOBAL, SET_RECOMENDATION_HINTS_GLOBAL  } from '../mutation-types';
+import {
+  REFRESH_RECOMENDATION_PINS_GLOBAL,
+  SET_RECOMENDATION_PINS_GLOBAL,
+  REFRESH_RECOMENDATION_HINTS_GLOBAL,
+  SET_RECOMENDATION_HINTS_GLOBAL
+} from '../mutation-types';
 
 const state = {
-  hintsObjectGlobal: [
-    {
+  hintsObjectGlobal: [{
       id: 1,
       pin: 'gaming',
       counter: 0,
@@ -52,25 +56,37 @@ const getters = {
 }
 
 const actions = {
-  manualUpdateGetters({ state, commit, getters, dispatch }) {
+  manualUpdateGetters({
+    state,
+    commit,
+    getters,
+    dispatch
+  }) {
     if (state.recommendedPinsGlobal.length === 0) {
       commit(REFRESH_RECOMENDATION_PINS_GLOBAL, [...getters.pinsListGlobal]);
       dispatch('pushRecomendedHints');
     }
   },
-  findElementInHintsObject({ state, commit, getters }, payload) {
+  findElementInHintsObject({
+    state,
+    commit,
+    getters
+  }, payload) {
     let enteredSearch = payload.enteredSearch;
     commit(REFRESH_RECOMENDATION_PINS_GLOBAL, []);
     for (let element in state.hintsObjectGlobal) {
       let hint = state.hintsObjectGlobal[element];
 
       if (hint.badges.indexOf(enteredSearch) !== -1) {
-          hint.counter += 1;
-          commit(SET_RECOMENDATION_PINS_GLOBAL, hint.pin)
+        hint.counter += 1;
+        commit(SET_RECOMENDATION_PINS_GLOBAL, hint.pin)
       }
     }
   },
-  iterateRecomendedPins({ state, commit }, payload) {
+  iterateRecomendedPins({
+    state,
+    commit
+  }, payload) {
     let pin = payload.pin;
     for (let element in state.hintsObjectGlobal) {
       let hint = state.hintsObjectGlobal[element];
@@ -79,18 +95,29 @@ const actions = {
       }
     }
   },
-  pushRecomendedHints({ state, dispatch, commit }) {
+  pushRecomendedHints({
+    state,
+    dispatch,
+    commit
+  }) {
     commit(REFRESH_RECOMENDATION_HINTS_GLOBAL, []);
     let pins = state.recommendedPinsGlobal;
     for (let element in pins) {
       let pin = pins[element];
-      dispatch('iterateRecomendedPins', { pin: pin })
+      dispatch('iterateRecomendedPins', {
+        pin: pin
+      })
     }
   },
-  filterByPin({ commit, dispatch }, payload) {
+  filterByPin({
+    commit,
+    dispatch
+  }, payload) {
     let pin = payload.pin;
     commit(REFRESH_RECOMENDATION_HINTS_GLOBAL, []);
-    dispatch('iterateRecomendedPins', { pin: pin })
+    dispatch('iterateRecomendedPins', {
+      pin: pin
+    })
   }
 }
 

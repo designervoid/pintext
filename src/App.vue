@@ -33,7 +33,7 @@
             <v-list-item
               v-for="(searchDropdownItem, index) in searchDropdownItems"
               :key="index"
-              @click="changeSearchTextDropdown(searchDropdownItem.title);"
+              @click="changeSearchTextDropdown({ title: searchDropdownItem.title });"
             >
               <v-list-item-title>{{ searchDropdownItem.title }}</v-list-item-title>
             </v-list-item>
@@ -75,6 +75,13 @@
                 </v-list-item>
               </v-list>
             </v-menu>
+      </v-row>
+
+      <v-row>
+        <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal"
+        :key="index">
+          {{ recommendedHintGlobal.title }} | {{ recommendedHintGlobal.text }} | {{ recommendedHintGlobal.badges }}
+        </div>
       </v-row>
 
       <v-row align="center" justify="center">
@@ -138,16 +145,11 @@ export default {
     },
     dialog: false,
     categoryDropdownTitle: '',
-    searchDropdownTitle: '',
-    searchDropdownItems: [
-      { title: 'Все пинтексты' },
-      { title: 'Ваши пинтексты' },
-      { title: 'Сохраненные пинтексты' },
-    ]
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
     ...mapState('hintsGlobal', ['recommendedPinsGlobal', 'recommendedHintsGlobal']),
+    ...mapState('searchDropdownState', ['searchDropdownTitle', 'searchDropdownItems']),
     ...mapGetters('hintsGlobal', ['pinsListGlobal', 'hintsListGlobal']),
     updatingSearch: {
       get() {
@@ -172,6 +174,7 @@ export default {
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
     ...mapActions('hintsGlobal', ['manualUpdateGetters', 'findElementInHintsObject', 'pushRecomendedHints', 'filterByPin']),
+    ...mapActions('searchDropdownState', ['changeSearchTextDropdown']),
     onChange() {
       this.$nextTick(() => {
         this.$refs.searchField.isMenuActive = false;
@@ -184,9 +187,6 @@ export default {
     changeCategoryTextDropdown(title) {
       this.categoryDropdownTitle = title;
       this.filterByPin({ pin: title });
-    },
-    changeSearchTextDropdown(title) {
-      this.searchDropdownTitle = title;
     }
   }
 }
