@@ -5,8 +5,8 @@
       <span class="hidden-sm-and-down">Pintext</span>
     </v-toolbar-title>
 
-    <v-combobox v-if="searchDropdownTitle === 'Все пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListGlobal" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
-      ref="searchField" @change="onChange()">
+    <v-combobox v-if="searchDropdownTitle === 'Все пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListGlobal" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down"
+      label="Search" persistent-hint :menu-props="menuProps" ref="searchField" @change="onChange()">
       <template v-slot:no-data>
         <v-list-item>
           <v-list-item-content>
@@ -18,8 +18,8 @@
       </template>
     </v-combobox>
 
-    <v-combobox v-if="searchDropdownTitle === 'Ваши пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListUser" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
-      ref="searchField" @change="onChange()">
+    <v-combobox v-if="searchDropdownTitle === 'Ваши пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListUser" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down"
+      label="Search" persistent-hint :menu-props="menuProps" ref="searchField" @change="onChange()">
       <template v-slot:no-data>
         <v-list-item>
           <v-list-item-content>
@@ -31,8 +31,8 @@
       </template>
     </v-combobox>
 
-    <v-combobox v-if="searchDropdownTitle === 'Сохраненные пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListUserSaved" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
-      ref="searchField" @change="onChange()">
+    <v-combobox v-if="searchDropdownTitle === 'Сохраненные пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListUserSaved" :search-input.sync="updatingSearch" hide-selected
+      class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps" ref="searchField" @change="onChange()">
       <template v-slot:no-data>
         <v-list-item>
           <v-list-item-content>
@@ -45,26 +45,18 @@
     </v-combobox>
 
     <v-menu :close-on-click="true" offset-y>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              color="primary"
-              dark
-              v-on="on"
-            >
-              {{ searchDropdownTitle }}
-            </v-btn>
-          </template>
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark v-on="on">
+          {{ searchDropdownTitle }}
+        </v-btn>
+      </template>
 
-          <v-list>
-            <v-list-item
-              v-for="(searchDropdownItem, index) in searchDropdownItems"
-              :key="index"
-              @click="changeSearchTextDropdown({ title: searchDropdownItem.title });"
-            >
-              <v-list-item-title>{{ searchDropdownItem.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+      <v-list>
+        <v-list-item v-for="(searchDropdownItem, index) in searchDropdownItems" :key="index" @click="changeSearchTextDropdown({ title: searchDropdownItem.title });">
+          <v-list-item-title>{{ searchDropdownItem.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
 
     <v-spacer />
     <v-btn rounded>
@@ -81,93 +73,84 @@
     <v-container class="fill-height">
       <v-row v-if="recommendedPinsGlobal.length > 0 && searchDropdownTitle === 'Все пинтексты'">
         <v-menu offset-y :close-on-click="true">
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  color="primary"
-                  dark
-                  v-on="on"
-                >
-                  {{ categoryDropdownTitle }}
-                </v-btn>
-              </template>
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark v-on="on">
+              {{ categoryDropdownTitle }}
+            </v-btn>
+          </template>
 
-              <v-list>
-                <v-list-item
-                  v-for="(recommendedPinGlobal, index) in recommendedPinsGlobal"
-                  :key="index"
-                  @click="changeCategoryTextDropdown({ title: recommendedPinGlobal });"
-                >
-                  <v-list-item-title>{{ recommendedPinGlobal }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+          <v-list>
+            <v-list-item v-for="(recommendedPinGlobal, index) in recommendedPinsGlobal" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinGlobal });">
+              <v-list-item-title>{{ recommendedPinGlobal }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'"
+        @click="refreshCategory();">
+          <div class="mx-2 my-1" >
+            <v-btn depressed small color="error">Сбросить категорию</v-btn>
+          </div>
+        </div>
       </v-row>
 
       <v-row v-if="recommendedPinsUser.length > 0 && searchDropdownTitle === 'Ваши пинтексты'">
         <v-menu offset-y :close-on-click="true">
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  color="primary"
-                  dark
-                  v-on="on"
-                >
-                  {{ categoryDropdownTitle }}
-                </v-btn>
-              </template>
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark v-on="on">
+              {{ categoryDropdownTitle }}
+            </v-btn>
+          </template>
 
-              <v-list>
-                <v-list-item
-                  v-for="(recommendedPinUser, index) in recommendedPinsUser"
-                  :key="index"
-                  @click="changeCategoryTextDropdown({ title: recommendedPinUser });"
-                >
-                  <v-list-item-title>{{ recommendedPinUser }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+          <v-list>
+            <v-list-item v-for="(recommendedPinUser, index) in recommendedPinsUser" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinUser });">
+              <v-list-item-title>{{ recommendedPinUser }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'"
+        @click="refreshCategory();">
+          <div class="mx-2 my-1" >
+            <v-btn depressed small color="error">Сбросить категорию</v-btn>
+          </div>
+        </div>
       </v-row>
 
       <v-row v-if="recommendedPinsUserSaved.length > 0 && searchDropdownTitle === 'Сохраненные пинтексты'">
         <v-menu offset-y :close-on-click="true">
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  color="primary"
-                  dark
-                  v-on="on"
-                >
-                  {{ categoryDropdownTitle }}
-                </v-btn>
-              </template>
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark v-on="on">
+              {{ categoryDropdownTitle }}
+            </v-btn>
+          </template>
 
-              <v-list>
-                <v-list-item
-                  v-for="(recommendedPinUserSaved, index) in recommendedPinsUserSaved"
-                  :key="index"
-                  @click="changeCategoryTextDropdown({ title: recommendedPinUserSaved });"
-                >
-                  <v-list-item-title>{{ recommendedPinUserSaved }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+          <v-list>
+            <v-list-item v-for="(recommendedPinUserSaved, index) in recommendedPinsUserSaved" :key="index" @click="changeCategoryTextDropdown({ title: recommendedPinUserSaved });">
+              <v-list-item-title>{{ recommendedPinUserSaved }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <div class="refresh-category" v-if="categoryDropdownTitle !== 'Выберите пин (категория)'"
+        @click="refreshCategory();">
+          <div class="mx-2 my-1" >
+            <v-btn depressed small color="error">Сбросить категорию</v-btn>
+          </div>
+        </div>
       </v-row>
 
       <v-row v-if="searchDropdownTitle === 'Все пинтексты'" justify="space-around">
-        <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal"
-        :key="index">
+        <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal" :key="index">
           <TheCard :title="recommendedHintGlobal.title" :text="recommendedHintGlobal.text" :isSavingPin="true" />
         </div>
       </v-row>
 
       <v-row v-if="searchDropdownTitle === 'Ваши пинтексты'" justify="space-around">
-        <div v-for="(recommendedHintUser, index) in recommendedHintsUser"
-        :key="index">
+        <div v-for="(recommendedHintUser, index) in recommendedHintsUser" :key="index">
           <TheCard :title="recommendedHintUser.title" :text="recommendedHintUser.text" />
         </div>
       </v-row>
 
       <v-row v-if="searchDropdownTitle === 'Сохраненные пинтексты'" justify="space-around">
-        <div v-for="(recommendedHintUserSaved, index) in recommendedHintsUserSaved"
-        :key="index">
+        <div v-for="(recommendedHintUserSaved, index) in recommendedHintsUserSaved" :key="index">
           <TheCard :title="recommendedHintUserSaved.title" :text="recommendedHintUserSaved.text" />
         </div>
       </v-row>
@@ -256,7 +239,12 @@
 
 <script>
 import TheCard from '@/components/TheCard'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import {
+  mapState,
+  mapGetters,
+  mapMutations,
+  mapActions
+} from 'vuex';
 
 export default {
   components: {
@@ -297,20 +285,20 @@ export default {
   },
   created() {
     if (this.searchDropdownTitle === 'Все пинтексты') {
-        this.manualUpdateGettersGlobal();
+      this.manualUpdateGettersGlobal();
     }
 
     if (this.searchDropdownTitle === 'Ваши пинтексты') {
-        this.manualUpdateGettersUser();
+      this.manualUpdateGettersUser();
     }
 
     if (this.searchDropdownTitle === 'Сохраненные пинтексты') {
-        this.manualUpdateGettersUserSavedl();
+      this.manualUpdateGettersUserSavedl();
     }
   },
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
-    ...mapMutations('searchGlobal', ['']),
+    ...mapMutations('categoryDropdownState', ['SET_CATEGORY_DROPDOWN_TITLE']),
     ...mapActions('hintsGlobal', ['manualUpdateGettersGlobal', 'findElementInHintsObjectGlobal', 'pushRecomendedHintsGlobal', 'filterByPinGlobal']),
     ...mapActions('hintsUser', ['manualUpdateGettersUser', 'findElementInHintsObjectUser', 'pushRecomendedHintsUser', 'filterByPinUser']),
     ...mapActions('hintsUserSaved', ['manualUpdateGettersUserSaved', 'findElementInHintsObjectUserSaved', 'pushRecomendedHintsUserSaved', 'filterByPinUserSaved']),
@@ -318,31 +306,47 @@ export default {
     ...mapActions('categoryDropdownState', ['changeCategoryTextDropdown']),
     onChange() {
       this.$nextTick(() => {
-          if (this.searchDropdownTitle === 'Все пинтексты' && this.enteredSearch) {
-            this.$refs.searchField.isMenuActive = false;
-            this.findElementInHintsObjectGlobal({
-              enteredSearch: this.enteredSearch
-            });
-            this.pushRecomendedHintsGlobal();
-          }
+        if (this.searchDropdownTitle === 'Все пинтексты' && this.enteredSearch) {
+          this.$refs.searchField.isMenuActive = false;
+          this.findElementInHintsObjectGlobal({
+            enteredSearch: this.enteredSearch
+          });
+          this.pushRecomendedHintsGlobal();
+        }
 
-          if (this.searchDropdownTitle === 'Ваши пинтексты' && this.enteredSearch) {
-            this.$refs.searchField.isMenuActive = false;
-            this.findElementInHintsObjectUser({
-              enteredSearch: this.enteredSearch
-            });
-            this.pushRecomendedHintsUser();
-          }
+        if (this.searchDropdownTitle === 'Ваши пинтексты' && this.enteredSearch) {
+          this.$refs.searchField.isMenuActive = false;
+          this.findElementInHintsObjectUser({
+            enteredSearch: this.enteredSearch
+          });
+          this.pushRecomendedHintsUser();
+        }
 
-          if (this.searchDropdownTitle === 'Сохраненные пинтексты' && this.enteredSearch) {
-            this.$refs.searchField.isMenuActive = false;
-            this.findElementInHintsObjectUserSaved({
-              enteredSearch: this.enteredSearch
-            });
-            this.pushRecomendedHintsUserSaved();
-          }
+        if (this.searchDropdownTitle === 'Сохраненные пинтексты' && this.enteredSearch) {
+          this.$refs.searchField.isMenuActive = false;
+          this.findElementInHintsObjectUserSaved({
+            enteredSearch: this.enteredSearch
+          });
+          this.pushRecomendedHintsUserSaved();
+        }
       });
     },
+    refreshCategory() {
+      if (this.searchDropdownTitle === 'Все пинтексты') {
+        this.SET_CATEGORY_DROPDOWN_TITLE('Выберите пин (категория)');
+        this.pushRecomendedHintsGlobal();
+      }
+
+      if (this.searchDropdownTitle === 'Ваши пинтексты') {
+        this.SET_CATEGORY_DROPDOWN_TITLE('Выберите пин (категория)');
+        this.pushRecomendedHintsUser();
+      }
+
+      if (this.searchDropdownTitle === 'Сохраненные пинтексты') {
+        this.SET_CATEGORY_DROPDOWN_TITLE('Выберите пин (категория)');
+        this.pushRecomendedHintsUserSaved();
+      }
+    }
 
   }
 }
@@ -352,5 +356,9 @@ export default {
 .v-input__slot {
     top: 15px;
     margin: 0;
+}
+
+.refresh-category {
+    align-self: center;
 }
 </style>
