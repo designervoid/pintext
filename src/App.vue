@@ -31,6 +31,19 @@
       </template>
     </v-combobox>
 
+    <v-combobox v-if="searchDropdownTitle === 'Сохраненные пинтексты'" prepend-inner-icon="mdi-magnify" solo-inverted flat v-model="enteredSearch" :items="hintsListUserSaved" :search-input.sync="updatingSearch" hide-selected class="hidden-sm-and-down" label="Search" persistent-hint :menu-props="menuProps"
+      ref="searchField" @change="onChange()">
+      <template v-slot:no-data>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>
+              Press "enter" to search for "<strong>{{ updatingSearchGlobal }}</strong>".
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-combobox>
+
     <v-menu :close-on-click="true" offset-y>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -114,6 +127,30 @@
             </v-menu>
       </v-row>
 
+      <v-row v-if="recommendedPinsUser.length > 0 && searchDropdownTitle === 'Сохраненные пинтексты'">
+        <v-menu offset-y :close-on-click="true">
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  v-on="on"
+                >
+                  {{ categoryDropdownTitle }}
+                </v-btn>
+              </template>
+
+              <v-list>
+                <v-list-item
+                  v-for="(recommendedPinUserSaved, index) in recommendedPinsUserSaved"
+                  :key="index"
+                  @click="changeCategoryTextDropdown(recommendedPinUserSaved);"
+                >
+                  <v-list-item-title>{{ recommendedPinUserSaved }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+      </v-row>
+
       <v-row v-if="searchDropdownTitle === 'Все пинтексты'">
         <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal"
         :key="index">
@@ -125,6 +162,13 @@
         <div v-for="(recommendedHintUser, index) in recommendedHintsUser"
         :key="index">
           {{ recommendedHintUser }}
+        </div>
+      </v-row>
+
+      <v-row v-if="searchDropdownTitle === 'Сохраненные пинтексты'">
+        <div v-for="(recommendedHintUserSaved, index) in recommendedHintsUserSaved"
+        :key="index">
+          {{ recommendedHintUserSaved }}
         </div>
       </v-row>
 
@@ -161,6 +205,24 @@
         </div>
         <div>
         recomendation hints: <code>{{ recommendedHintsUser }}</code>
+        </div>
+      </v-row>
+
+      <v-row align="center" justify="center" v-if="searchDropdownTitle === 'Сохраненные пинтексты'">
+        <div>
+        v-model: <code>{{ updatingSearchGlobal }}</code>
+        </div>
+        <div>
+        search: <code>{{ enteredSearchGlobal }}</code>
+        </div>
+        <div>
+        hints: <code>{{ hintsListUserSaved }}</code>
+        </div>
+        <div>
+        recomendation pins: <code>{{ recommendedPinsUserSaved }}</code>
+        </div>
+        <div>
+        recomendation hints: <code>{{ recommendedHintsUserSaved }}</code>
         </div>
       </v-row>
 
@@ -211,6 +273,8 @@ export default {
     ...mapState('hintsGlobal', ['recommendedPinsGlobal', 'recommendedHintsGlobal']),
     ...mapGetters('hintsUser', ['pinsListUser', 'hintsListUser']),
     ...mapState('hintsUser', ['recommendedPinsUser', 'recommendedHintsUser']),
+    ...mapGetters('hintsUserSaved', ['pinsListUserSaved', 'hintsListUserSaved']),
+    ...mapState('hintsUserSaved', ['recommendedPinsUserSaved', 'recommendedHintsUserSaved']),
     ...mapState('searchDropdownState', ['searchDropdownTitle', 'searchDropdownItems']),
     updatingSearch: {
       get() {
@@ -238,6 +302,7 @@ export default {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
     ...mapActions('hintsGlobal', ['manualUpdateGettersGlobal', 'findElementInHintsObjectGlobal', 'pushRecomendedHintsGlobal', 'filterByPinGlobal']),
     ...mapActions('hintsUser', ['manualUpdateGettersUser', 'findElementInHintsObjectUser', 'pushRecomendedHintsUser', 'filterByPinUser']),
+    ...mapActions('hintsUserSaved', ['manualUpdateGettersUserSaved', 'findElementInHintsObjectUserSaved', 'pushRecomendedHintsUserSaved', 'filterByPinUserSaved']),
     ...mapActions('searchDropdownState', ['changeSearchTextDropdown']),
     onChange() {
       this.$nextTick(() => {
@@ -255,6 +320,14 @@ export default {
               enteredSearch: this.enteredSearch
             });
             this.pushRecomendedHintsUser();
+          }
+
+          if (this.searchDropdownTitle === 'Сохраненные пинтексты') {
+            this.$refs.searchField.isMenuActive = false;
+            this.findElementInHintsObjectUserSaved({
+              enteredSearch: this.enteredSearch
+            });
+            this.pushRecomendedHintsUserSaved();
           }
       });
     },

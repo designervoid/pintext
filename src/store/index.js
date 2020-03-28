@@ -8,6 +8,7 @@ import searchDropdownState from '@/store/modules/searchDropdownState';
 import searchGlobal from '@/store/modules/searchGlobal';
 import hintsGlobal from '@/store/modules/hintsGlobal';
 import hintsUser from '@/store/modules/hintsUser';
+import hintsUserSaved from '@/store/modules/hintsUserSaved';
 
 export default new Vuex.Store({
   state: {},
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     searchDropdownState,
     searchGlobal,
     hintsGlobal,
-    hintsUser
+    hintsUser,
+    hintsUserSaved
   },
   // plugins: [createPersistedState()]
 });
