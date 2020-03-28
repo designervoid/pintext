@@ -4,7 +4,7 @@ import hintsUserSaved from './hintsUserSaved';
 import { SET_CATEGORY_DROPDOWN_TITLE } from '../mutation-types';
 
 const state = {
-  categoryDropdownTitle: '',
+  categoryDropdownTitle: 'Выберите пин (категория)',
 }
 
 const getters = {

@@ -151,28 +151,29 @@
             </v-menu>
       </v-row>
 
-      <v-row v-if="searchDropdownTitle === 'Все пинтексты'">
+      <v-row v-if="searchDropdownTitle === 'Все пинтексты'" justify="space-around">
         <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal"
         :key="index">
-          {{ recommendedHintGlobal }}
+          <TheCard :title="recommendedHintGlobal.title" :text="recommendedHintGlobal.text" :isSavingPin="true" />
         </div>
       </v-row>
 
-      <v-row v-if="searchDropdownTitle === 'Ваши пинтексты'">
+      <v-row v-if="searchDropdownTitle === 'Ваши пинтексты'" justify="space-around">
         <div v-for="(recommendedHintUser, index) in recommendedHintsUser"
         :key="index">
-          {{ recommendedHintUser }}
+          <TheCard :title="recommendedHintUser.title" :text="recommendedHintUser.text" />
         </div>
       </v-row>
 
-      <v-row v-if="searchDropdownTitle === 'Сохраненные пинтексты'">
+      <v-row v-if="searchDropdownTitle === 'Сохраненные пинтексты'" justify="space-around">
         <div v-for="(recommendedHintUserSaved, index) in recommendedHintsUserSaved"
         :key="index">
-          {{ recommendedHintUserSaved }}
+          <TheCard :title="recommendedHintUserSaved.title" :text="recommendedHintUserSaved.text" />
         </div>
       </v-row>
 
-      <v-row align="center" justify="center" v-if="searchDropdownTitle === 'Все пинтексты'">
+      <!-- DEBUG -->
+      <!-- <v-row align="center" justify="center" v-if="searchDropdownTitle === 'Все пинтексты'">
         <div>
         v-model: <code>{{ updatingSearchGlobal }}</code>
         </div>
@@ -224,7 +225,7 @@
         <div>
         recomendation hints: <code>{{ recommendedHintsUserSaved }}</code>
         </div>
-      </v-row>
+      </v-row> -->
 
     </v-container>
   </v-content>
@@ -254,11 +255,12 @@
 </template>
 
 <script>
+import TheCard from '@/components/TheCard'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
-  props: {
-    source: String,
+  components: {
+    TheCard
   },
   data: () => ({
     menuProps: {
