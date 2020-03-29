@@ -2,7 +2,8 @@ import {
   REFRESH_RECOMENDATION_PINS_USER,
   SET_RECOMENDATION_PINS_USER,
   REFRESH_RECOMENDATION_HINTS_USER,
-  SET_RECOMENDATION_HINTS_USER
+  SET_RECOMENDATION_HINTS_USER,
+  APPEND_HINTS_OBJECT_USER
 } from '../mutation-types';
 
 const state = {
@@ -62,10 +63,8 @@ const actions = {
     getters,
     dispatch
   }) {
-    if (state.recommendedPinsUser.length === 0) {
-      commit(REFRESH_RECOMENDATION_PINS_USER, [...getters.pinsListUser]);
-      dispatch('pushRecomendedHintsUser');
-    }
+    commit(REFRESH_RECOMENDATION_PINS_USER, [...getters.pinsListUser]);
+    dispatch('pushRecomendedHintsUser');
   },
   findElementInHintsObjectUser({
     state,
@@ -121,6 +120,10 @@ const actions = {
     dispatch('iterateRecomendedPinsUser', {
       pin: pin
     })
+  },
+  appendHintsObjectUser({ commit }, payload) {
+      let modal = payload.modal;
+      commit(APPEND_HINTS_OBJECT_USER, modal);
   }
 }
 
@@ -136,6 +139,9 @@ const mutations = {
   },
   [SET_RECOMENDATION_HINTS_USER](state, payload) {
     state.recommendedHintsUser.push(payload);
+  },
+  [APPEND_HINTS_OBJECT_USER](state, payload) {
+    state.hintsObjectUser.push(payload);
   }
 }
 

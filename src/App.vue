@@ -207,7 +207,7 @@
 
     </v-container>
   </v-content>
-  <v-btn bottom color="pink" dark fab fixed right @click="dialog = !dialog">
+  <v-btn bottom color="pink" dark fab fixed right @click="dialog = !dialog" v-if="this.searchDropdownTitle === 'Ваши пинтексты'">
     <v-icon>mdi-plus</v-icon>
   </v-btn>
   <v-dialog v-model="dialog" width="800px">
@@ -218,17 +218,17 @@
       <v-container>
         <v-row class="mx-2">
           <v-col cols="12">
-            <v-text-field prepend-icon="mdi-text" placeholder="Title" />
+            <v-text-field prepend-icon="mdi-text" placeholder="Title" v-model="modal.title" />
           </v-col>
         </v-row>
         <v-row class="mx-2">
           <v-col cols="12">
-            <v-text-field prepend-icon="mdi-text" placeholder="Text" />
+            <v-text-field prepend-icon="mdi-text" placeholder="Text" v-model="modal.text" />
           </v-col>
         </v-row>
         <v-row class="mx-2">
           <v-col cols="12">
-            <v-combobox v-model="chips" :items="hintsListGlobal" chips clearable label="Write badges" multiple prepend-icon="mdi-text" solo>
+            <v-combobox v-model="modal.badges" :items="hintsListGlobal" chips clearable label="Write badges" multiple prepend-icon="mdi-text" solo>
               <template v-slot:selection="{ attrs, item, select, selected }">
                 <v-chip v-bind="attrs" :input-value="selected" close @click="select" @click:close="remove(item)">
                   {{ item }}
@@ -241,7 +241,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn text color="primary" @click="closeDialog();">Cancel</v-btn>
-        <v-btn text @click="createPin();">Save</v-btn>
+        <v-btn text @click="createPin();" :disabled="!modal.badges.length > 0 || !modal.title.length > 0 || !modal.text.length > 0">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -266,7 +266,11 @@ export default {
       closeOnContentClick: true,
     },
     dialog: false,
-    chips: [],
+    modal: {
+      title: '',
+      text: '',
+      badges: [],
+    }
   }),
   computed: {
     ...mapState('searchGlobal', ['updatingSearchGlobal', 'enteredSearchGlobal']),
@@ -305,21 +309,14 @@ export default {
     }
 
     if (this.searchDropdownTitle === 'Сохраненные пинтексты') {
-      this.manualUpdateGettersUserSavedl();
-    }
-  },
-  watch: {
-    dialog(newValue) {
-      if (this.chips || newValue === false) {
-        this.chips = [];
-      }
+      this.manualUpdateGettersUserSaved();
     }
   },
   methods: {
     ...mapMutations('searchGlobal', ['UPDATE_SEARCH_GLOBAL', 'SET_SEARCH_GLOBAL']),
     ...mapMutations('categoryDropdownState', ['SET_CATEGORY_DROPDOWN_TITLE']),
-    ...mapActions('hintsGlobal', ['manualUpdateGettersGlobal', 'findElementInHintsObjectGlobal', 'pushRecomendedHintsGlobal', 'filterByPinGlobal']),
-    ...mapActions('hintsUser', ['manualUpdateGettersUser', 'findElementInHintsObjectUser', 'pushRecomendedHintsUser', 'filterByPinUser']),
+    ...mapActions('hintsGlobal', ['manualUpdateGettersGlobal', 'findElementInHintsObjectGlobal', 'pushRecomendedHintsGlobal', 'filterByPinGlobal', 'appendHintsObjectGlobal']),
+    ...mapActions('hintsUser', ['manualUpdateGettersUser', 'findElementInHintsObjectUser', 'pushRecomendedHintsUser', 'filterByPinUser', 'appendHintsObjectUser']),
     ...mapActions('hintsUserSaved', ['manualUpdateGettersUserSaved', 'findElementInHintsObjectUserSaved', 'pushRecomendedHintsUserSaved', 'filterByPinUserSaved']),
     ...mapActions('searchDropdownState', ['changeSearchTextDropdown']),
     ...mapActions('categoryDropdownState', ['changeCategoryTextDropdown']),
@@ -370,12 +367,13 @@ export default {
       this.dialog = false;
     },
     createPin() {
-      this.dialog = false;
-      console.log(this.chips);
+      this.appendHintsObjectUser({ modal: this.modal });
+      this.manualUpdateGettersUser();
+      this.closeDialog();
     },
     remove(item) {
-      this.chips.splice(this.chips.indexOf(item), 1)
-      this.chips = [...this.chips]
+      this.modal.badges.splice(this.modal.badges.indexOf(item), 1)
+      this.modal.badges = [...this.modal.badges]
     },
   }
 }

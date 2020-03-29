@@ -3,7 +3,7 @@ import {
   SET_RECOMENDATION_PINS_GLOBAL,
   REFRESH_RECOMENDATION_HINTS_GLOBAL,
   SET_RECOMENDATION_HINTS_GLOBAL,
-  SET_BOOKMARK_STATE
+  SET_BOOKMARK_STATE,
 } from '../mutation-types';
 
 const state = {
@@ -126,7 +126,7 @@ const actions = {
     dispatch('iterateRecomendedPinsGlobal', {
       pin: pin
     })
-  }
+  },
 }
 
 const mutations = {
