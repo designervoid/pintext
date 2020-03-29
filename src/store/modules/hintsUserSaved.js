@@ -64,10 +64,8 @@ const actions = {
     getters,
     dispatch
   }) {
-    if (state.recommendedPinsUserSaved.length === 0) {
-      commit(REFRESH_RECOMENDATION_PINS_USER_SAVED, [...getters.pinsListUserSaved]);
-      dispatch('pushRecomendedHintsUserSaved');
-    }
+    commit(REFRESH_RECOMENDATION_PINS_USER_SAVED, [...getters.pinsListUserSaved]);
+    dispatch('pushRecomendedHintsUserSaved');
   },
   findElementInHintsObjectUserSaved({
     state,
@@ -131,10 +129,8 @@ const mutations = {
     state.hintsObjectUserSaved.push(payload);
   },
   [SPLICE_HINTS_OBJECT_USER_SAVED](state, payload) {
-    const indexMainObject = state.hintsObjectUserSaved.indexOf(payload);
-    const indexRecommendedObject = state.recommendedHintsUserSaved.indexOf(payload);
-    state.hintsObjectUserSaved.splice(indexMainObject, 1);
-    state.recommendedHintsUserSaved.splice(indexRecommendedObject, 1);
+    const index = state.hintsObjectUserSaved.indexOf(payload);
+    state.hintsObjectUserSaved.splice(index, 1);
   },
   [REFRESH_RECOMENDATION_PINS_USER_SAVED](state, payload) {
     state.recommendedPinsUserSaved = payload;

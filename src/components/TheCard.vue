@@ -76,14 +76,14 @@ export default {
           object: this.object,
           boolean: false
         });
-
+        this.manualUpdateGettersUserSaved();
       } else {
         this.APPEND_HINTS_OBJECT_USER_SAVED(this.object);
         this.SET_BOOKMARK_STATE({
           object: this.object,
           boolean: true
         });
-
+        this.manualUpdateGettersUserSaved();
       }
     }
   }
