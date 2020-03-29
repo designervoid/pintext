@@ -1,3 +1,8 @@
+### important
+```
+требуется разрешение больше 960 пикселей. иначе search bar пропадет на мобильной версии.
+```
+
 ### pintext first steps
 ```
 git clone https://github.com/designervoid/pintext.git
