@@ -1,6 +1,6 @@
 <template>
 <v-app id="inspire">
-  <v-app-bar :clipped-left="false" app color="blue darken-3" dark>
+  <v-app-bar app color="blue darken-3" dark>
     <v-toolbar-title class="ml-0 pl-4" style="width: 100px;">
       <span class="hidden-sm-and-down">Pintext</span>
     </v-toolbar-title>
@@ -142,69 +142,19 @@
         <div v-for="(recommendedHintUser, index) in recommendedHintsUser" :key="index">
           <TheCard :object="recommendedHintUser" />
         </div>
+        <div v-if="recommendedHintsUser.length === 0">
+          Ничего не найдено
+        </div>
       </v-row>
 
       <v-row v-if="searchDropdownTitle === 'Сохраненные пинтексты'" justify="space-around" align="center">
         <div v-for="(recommendedHintUserSaved, index) in recommendedHintsUserSaved" :key="index">
           <TheCard :object="recommendedHintUserSaved" />
         </div>
-      </v-row>
-
-      <!-- DEBUG -->
-      <!-- <v-row align="center" justify="center" v-if="searchDropdownTitle === 'Все пинтексты'">
-        <div>
-        v-model: <code>{{ updatingSearchGlobal }}</code>
-        </div>
-        <div>
-        search: <code>{{ enteredSearchGlobal }}</code>
-        </div>
-        <div>
-        hints: <code>{{ hintsListGlobal }}</code>
-        </div>
-        <div>
-        recomendation pins: <code>{{ recommendedPinsGlobal }}</code>
-        </div>
-        <div>
-        recomendation hints: <code>{{ recommendedHintsGlobal }}</code>
+        <div v-if="recommendedHintsUserSaved.length === 0">
+          Ничего не найдено
         </div>
       </v-row>
-
-      <v-row align="center" justify="center" v-if="searchDropdownTitle === 'Ваши пинтексты'">
-        <div>
-        v-model: <code>{{ updatingSearchGlobal }}</code>
-        </div>
-        <div>
-        search: <code>{{ enteredSearchGlobal }}</code>
-        </div>
-        <div>
-        hints: <code>{{ hintsListUser }}</code>
-        </div>
-        <div>
-        recomendation pins: <code>{{ recommendedPinsUser }}</code>
-        </div>
-        <div>
-        recomendation hints: <code>{{ recommendedHintsUser }}</code>
-        </div>
-      </v-row>
-
-      <v-row align="center" justify="center" v-if="searchDropdownTitle === 'Сохраненные пинтексты'">
-        <div>
-        v-model: <code>{{ updatingSearchGlobal }}</code>
-        </div>
-        <div>
-        search: <code>{{ enteredSearchGlobal }}</code>
-        </div>
-        <div>
-        hints: <code>{{ hintsListUserSaved }}</code>
-        </div>
-        <div>
-        recomendation pins: <code>{{ recommendedPinsUserSaved }}</code>
-        </div>
-        <div>
-        recomendation hints: <code>{{ recommendedHintsUserSaved }}</code>
-        </div>
-      </v-row> -->
-
     </v-container>
   </v-content>
   <v-btn bottom color="pink" dark fab fixed right @click="dialog = !dialog" v-if="this.searchDropdownTitle === 'Ваши пинтексты'">
