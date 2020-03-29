@@ -1,4 +1,6 @@
 import {
+  APPEND_HINTS_OBJECT_USER_SAVED,
+  SPLICE_HINTS_OBJECT_USER_SAVED,
   REFRESH_RECOMENDATION_PINS_USER_SAVED,
   SET_RECOMENDATION_PINS_USER_SAVED,
   REFRESH_RECOMENDATION_HINTS_USER_SAVED,
@@ -100,6 +102,9 @@ const actions = {
     dispatch,
     commit
   }) {
+    if (state.recommendedPinsUserSaved.length === 0) {
+      console.log('not found anything')
+    }
     commit(REFRESH_RECOMENDATION_HINTS_USER_SAVED, []);
     let pins = state.recommendedPinsUserSaved;
     for (let element in pins) {
@@ -122,6 +127,15 @@ const actions = {
 }
 
 const mutations = {
+  [APPEND_HINTS_OBJECT_USER_SAVED](state, payload) {
+    state.hintsObjectUserSaved.push(payload);
+  },
+  [SPLICE_HINTS_OBJECT_USER_SAVED](state, payload) {
+    const indexMainObject = state.hintsObjectUserSaved.indexOf(payload);
+    const indexRecommendedObject = state.recommendedHintsUserSaved.indexOf(payload);
+    state.hintsObjectUserSaved.splice(indexMainObject, 1);
+    state.recommendedHintsUserSaved.splice(indexRecommendedObject, 1);
+  },
   [REFRESH_RECOMENDATION_PINS_USER_SAVED](state, payload) {
     state.recommendedPinsUserSaved = payload;
   },

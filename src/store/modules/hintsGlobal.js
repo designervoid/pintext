@@ -2,7 +2,8 @@ import {
   REFRESH_RECOMENDATION_PINS_GLOBAL,
   SET_RECOMENDATION_PINS_GLOBAL,
   REFRESH_RECOMENDATION_HINTS_GLOBAL,
-  SET_RECOMENDATION_HINTS_GLOBAL
+  SET_RECOMENDATION_HINTS_GLOBAL,
+  SET_BOOKMARK_STATE
 } from '../mutation-types';
 
 const state = {
@@ -13,6 +14,7 @@ const state = {
       title: 'some title about gaming',
       text: 'some text here about gaming',
       badges: ['game', 'gamer', 'games', 'computer'],
+      bookmarked: false,
     },
     {
       id: 2,
@@ -21,6 +23,7 @@ const state = {
       title: 'some title about prograaming',
       text: 'some text here about prograaming',
       badges: ['programmer', 'code', 'coder', 'javascript', 'computer', 'vue', 'python'],
+      bookmarked: false,
     },
     {
       id: 3,
@@ -29,6 +32,7 @@ const state = {
       title: 'some title about computers',
       text: 'some text here about computers',
       badges: ['computer', 'network'],
+      bookmarked: false,
     }
   ],
   recommendedPinsGlobal: [],
@@ -100,6 +104,10 @@ const actions = {
     dispatch,
     commit
   }) {
+    if (state.recommendedPinsGlobal.length === 0) {
+      dispatch('manualUpdateGettersGlobal');
+      console.log('not searchable')
+    }
     commit(REFRESH_RECOMENDATION_HINTS_GLOBAL, []);
     let pins = state.recommendedPinsGlobal;
     for (let element in pins) {
@@ -133,6 +141,10 @@ const mutations = {
   },
   [SET_RECOMENDATION_HINTS_GLOBAL](state, payload) {
     state.recommendedHintsGlobal.push(payload);
+  },
+  [SET_BOOKMARK_STATE](state, payload) {
+    const index = state.hintsObjectGlobal.indexOf(payload.object);
+    state.hintsObjectGlobal[index].bookmarked = payload.boolean;
   }
 }
 

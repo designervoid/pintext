@@ -2,17 +2,19 @@
 <v-card class="mx-auto my-2" max-width="344" outlined>
   <v-list-item three-line>
     <v-list-item-content>
-      <v-list-item-title class="headline mb-1">{{ title }}</v-list-item-title>
-      <v-list-item-subtitle>{{ text }}</v-list-item-subtitle>
+      <v-list-item-title class="headline mb-1">{{ object.title }}</v-list-item-title>
+      <v-list-item-subtitle>{{ object.text }}</v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
 
   <v-card-actions v-if="isSavingPin">
-    <v-btn text @click="snackbar = true">Save</v-btn>
+    <v-btn icon @click="clickedBookmark();" v-bind:class="{ 'active-bookmark': !object.bookmarked }">
+                <v-icon>mdi-bookmark</v-icon>
+    </v-btn>
   </v-card-actions>
 
   <div class="badges px-4 pr-4">
-    <v-chip class="ma-2" v-for="(badge, index) in badges" :key="index">
+    <v-chip class="ma-2" v-for="(badge, index) in object.badges" :key="index">
       {{ badge }}
     </v-chip>
   </div>
@@ -21,7 +23,7 @@
       v-model="snackbar"
       :timeout="timeout"
     >
-      Пинтекст успешно добавлен. Вы можете увидеть его во вкладке "Сохраненные пинтексты".
+      {{ object.bookmarked ? 'Пинтекст успешно добавлен. Вы можете увидеть его во вкладке "Сохраненные пинтексты".' : 'Пинтекст удален из закладок.'}}
       <v-btn
         color="blue"
         text
@@ -34,24 +36,14 @@
 </template>
 
 <script>
+import { mapMutations, mapActions } from 'vuex';
+
 export default {
   props: {
-    badges: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    title: {
-      type: String,
-      default () {
-        return ''
-      }
-    },
-    text: {
-      type: String,
-      default () {
-        return ''
+    object: {
+      type: Object,
+      default() {
+        return {}
       }
     },
     isSavingPin: {
@@ -59,12 +51,42 @@ export default {
       default () {
         return false
       }
-    }
+    },
+    // isActiveBookmark: {
+    //   type: Boolean,
+    //   default () {
+    //     return false
+    //   }
+    // }
   },
   data: () => ({
       snackbar: false,
       timeout: 2000,
+      snackbarText: ''
   }),
+  methods: {
+    ...mapMutations('hintsGlobal', ['SET_BOOKMARK_STATE']),
+    ...mapMutations('hintsUserSaved', ['APPEND_HINTS_OBJECT_USER_SAVED', 'SPLICE_HINTS_OBJECT_USER_SAVED']),
+    ...mapActions('hintsUserSaved', ['manualUpdateGettersUserSaved']),
+    clickedBookmark() {
+      this.snackbar = true;
+      if (this.object.bookmarked) {
+        this.SPLICE_HINTS_OBJECT_USER_SAVED(this.object);
+        this.SET_BOOKMARK_STATE({
+          object: this.object,
+          boolean: false
+        });
+
+      } else {
+        this.APPEND_HINTS_OBJECT_USER_SAVED(this.object);
+        this.SET_BOOKMARK_STATE({
+          object: this.object,
+          boolean: true
+        });
+
+      }
+    }
+  }
 }
 </script>
 
@@ -82,5 +104,8 @@ export default {
   height: 3rem !important;
   background-color: rgba(0, 0, 0, .5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+.active-bookmark {
+  opacity: 0.4;
 }
 </style>

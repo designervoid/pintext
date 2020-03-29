@@ -100,6 +100,9 @@ const actions = {
     dispatch,
     commit
   }) {
+    if (state.recommendedPinsUser.length === 0) {
+      console.log('not found anything')
+    }
     commit(REFRESH_RECOMENDATION_HINTS_USER, []);
     let pins = state.recommendedPinsUser;
     for (let element in pins) {

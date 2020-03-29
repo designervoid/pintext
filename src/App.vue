@@ -134,19 +134,19 @@
 
       <v-row v-if="searchDropdownTitle === 'Все пинтексты'" justify="space-around" align="center">
         <div v-for="(recommendedHintGlobal, index) in recommendedHintsGlobal" :key="index">
-          <TheCard :badges="recommendedHintGlobal.badges" :title="recommendedHintGlobal.title" :text="recommendedHintGlobal.text" :isSavingPin="true" />
+          <TheCard :object="recommendedHintGlobal" :isSavingPin="true" />
         </div>
       </v-row>
 
       <v-row v-if="searchDropdownTitle === 'Ваши пинтексты'" justify="space-around" align="center">
         <div v-for="(recommendedHintUser, index) in recommendedHintsUser" :key="index">
-          <TheCard :badges="recommendedHintUser.badges" :title="recommendedHintUser.title" :text="recommendedHintUser.text" />
+          <TheCard :object="recommendedHintUser" />
         </div>
       </v-row>
 
       <v-row v-if="searchDropdownTitle === 'Сохраненные пинтексты'" justify="space-around" align="center">
         <div v-for="(recommendedHintUserSaved, index) in recommendedHintsUserSaved" :key="index">
-          <TheCard :badges="recommendedHintUserSaved.badges" :title="recommendedHintUserSaved.title" :text="recommendedHintUserSaved.text" />
+          <TheCard :object="recommendedHintUserSaved" />
         </div>
       </v-row>
 
