@@ -218,6 +218,11 @@
       <v-container>
         <v-row class="mx-2">
           <v-col cols="12">
+            <v-text-field prepend-icon="mdi-text" placeholder="Pin" v-model="modal.pin" />
+          </v-col>
+        </v-row>
+        <v-row class="mx-2">
+          <v-col cols="12">
             <v-text-field prepend-icon="mdi-text" placeholder="Title" v-model="modal.title" />
           </v-col>
         </v-row>
@@ -267,6 +272,7 @@ export default {
     },
     dialog: false,
     modal: {
+      pin: '',
       title: '',
       text: '',
       badges: [],
@@ -369,6 +375,7 @@ export default {
     createPin() {
       this.appendHintsObjectUser({ modal: this.modal });
       this.manualUpdateGettersUser();
+
       this.closeDialog();
     },
     remove(item) {
