@@ -1,4 +1,10 @@
-# pintext
+### pintext first steps
+```
+git clone https://github.com/designervoid/pintext.git
+cd pintext
+npm install
+npm run serve
+```
 
 ## Project setup
 ```
